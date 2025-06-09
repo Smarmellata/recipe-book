@@ -1,0 +1,19 @@
+<div class="recipes-home-container">
+  <h2 class="title">Recipes of the day</h2>
+  <div class="carousel">
+    <button class="carousel-btn left" (click)="prev()">&#8592;</button>
+    <div class="carousel-track">
+      <div class="carousel-item active" *ngFor="let recipe of visibleRecipes">
+        <app-recipe-card
+          [name]="recipe.name"
+          [description]="recipe.description"
+          [imageUrl]="recipe.image"
+          [isFavorite]="false"
+          [id]="recipe.idMeal"
+          (click)="goToRecipe(recipe)"
+        ></app-recipe-card>
+      </div>
+    </div>
+    <button class="carousel-btn right" (click)="next()">&#8594;</button>
+  </div>
+</div>

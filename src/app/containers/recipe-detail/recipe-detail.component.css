@@ -1,0 +1,147 @@
+.recipe-detail-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  background: #fffbe7;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding: 2rem 1.5rem;
+}
+
+.recipe-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.recipe-image {
+  width: 320px;
+  max-width: 100%;
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+}
+
+.recipe-info {
+  flex: 1;
+  min-width: 220px;
+}
+
+.recipe-title {
+  font-size: 2.2rem;
+  color: #e67e22;
+  margin-bottom: 1rem;
+}
+
+.recipe-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.meta-item {
+  background: #fff3cd;
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.8rem;
+}
+
+.ingredients-section {
+  margin-bottom: 2rem;
+}
+
+.ingredients-section h2 {
+  font-size: 1.4rem;
+  color: #e67e22;
+  margin-bottom: 1rem;
+}
+
+.ingredients-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ingredients-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid #ffe5b4;
+  font-size: 1.1rem;
+}
+
+.ingredient-type {
+  font-weight: 500;
+}
+
+.ingredient-quantity {
+  color: #e67e22;
+  font-weight: 500;
+}
+
+.instructions-section h2 {
+  font-size: 1.4rem;
+  color: #e67e22;
+  margin-bottom: 1rem;
+}
+
+.instructions-text {
+  white-space: pre-line;
+  font-size: 1.1rem;
+  color: #444;
+  background: #fff;
+  border-radius: 0.7rem;
+  padding: 1.2rem;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .recipe-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  }
+  .recipe-detail-container {
+    padding: 1rem 0.3rem;
+  }
+}
+
+.recipe-title-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.favorite-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  transition: transform 0.15s;
+}
+
+.favorite-btn svg {
+  transition: fill 0.2s, stroke 0.2s;
+}
+
+.favorite-btn.favorited svg {
+  filter: drop-shadow(0 2px 8px #e74c3c33);
+}
+
+.favorite-btn:active {
+  transform: scale(1.1);
+}
+
+@media (max-width: 700px) {
+  .recipe-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

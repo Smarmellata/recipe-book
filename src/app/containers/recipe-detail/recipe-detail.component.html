@@ -1,0 +1,52 @@
+<div class="recipe-detail-container">
+  <div class="recipe-header">
+    <img class="recipe-image" [src]="recipe.image" [alt]="recipe.name" />
+    <div class="recipe-info">
+      <div class="recipe-title-row">
+        <h1 class="recipe-title">{{ recipe.name }}</h1>
+        <button
+          class="favorite-btn"
+          [class.favorited]="isFavorite"
+          (click)="toggleFavorite()"
+          [attr.aria-label]="
+            isFavorite ? 'Remove from favorites' : 'Add to favorites'
+          "
+          [title]="isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+        >
+          <svg width="32" height="32" viewBox="0 0 24 24">
+            <path
+              [attr.fill]="isFavorite ? '#e74c3c' : 'none'"
+              [attr.stroke]="isFavorite ? '#e74c3c' : '#bbb'"
+              stroke-width="2"
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="recipe-meta">
+        <span class="meta-item"
+          ><strong>Category:</strong> {{ recipe.category }}</span
+        >
+        <span class="meta-item"><strong>Area:</strong> {{ recipe.area }}</span>
+        <span class="meta-item" *ngIf="recipe.tags"
+          ><strong>Tags:</strong> {{ recipe.tags }}</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="ingredients-section">
+    <h2>Ingredients</h2>
+    <ul class="ingredients-list">
+      <li *ngFor="let ingredient of recipe.ingredients">
+        <span class="ingredient-type">{{ ingredient.type }}</span>
+        <span class="ingredient-quantity">{{ ingredient.quantity }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="instructions-section">
+    <h2>Instructions</h2>
+    <p class="instructions-text">{{ recipe.instructions }}</p>
+  </div>
+</div>

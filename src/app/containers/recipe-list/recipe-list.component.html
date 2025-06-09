@@ -1,0 +1,20 @@
+<div class="recipe-list-container">
+  <div class="searchbar-wrapper">
+    <app-search-bar (keyword)="onSearch($event)"></app-search-bar>
+  </div>
+
+  <div class="recipes-grid">
+    <app-recipe-card
+      *ngFor="let recipe of recipes"
+      [name]="recipe.name"
+      [description]="recipe.description"
+      [imageUrl]="recipe.image"
+      [isFavorite]="recipe.isFavorite"
+      [id]="recipe.idMeal"
+      (click)="goToRecipe(recipe)"
+    ></app-recipe-card>
+  </div>
+  <div *ngIf="recipes.length === 0" class="no-results-message">
+    Sorry, we couldn't find any recipes matching your search.
+  </div>
+</div>

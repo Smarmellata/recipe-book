@@ -1,0 +1,14 @@
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RecipesHomeComponent } from "./recipes-home.component";
+import { RecipeCardModule } from "../../components/recipe-card/recipe-card.module";
+import { RouterModule, Routes } from "@angular/router";
+
+const routes: Routes = [{ path: "", component: RecipesHomeComponent }];
+
+@NgModule({
+  declarations: [RecipesHomeComponent],
+  imports: [CommonModule, RecipeCardModule, RouterModule.forChild(routes)],
+  exports: [RecipesHomeComponent],
+})
+export class RecipesHomeModule {}

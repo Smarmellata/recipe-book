@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "outDir": "./out-tsc/app",
+    "rootDir": "./src",
+    "strict": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "angularCompilerOptions": {
+    "enableIvy": true
+  },
+  "include": ["src/**/*.ts", "src/app/containers/recipes-home/recipe-home"],
+  "exclude": ["node_modules"]
+}

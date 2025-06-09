@@ -1,0 +1,110 @@
+.recipes-home-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem 1rem;
+  background: #fffbe7;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #e67e22;
+  letter-spacing: 1px;
+}
+
+.carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.carousel-btn {
+  background: #fff;
+  border: none;
+  font-size: 2rem;
+  color: #e67e22;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  transition: background 0.2s;
+  z-index: 2;
+}
+
+.carousel-btn:hover {
+  background: #ffe5b4;
+}
+
+.carousel-track {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  width: 100%;
+  max-width: 1050px;
+  margin: 0 1.5rem;
+  transition: transform 0.4s;
+  overflow: visible;
+  align-items: stretch;
+  position: relative;
+}
+
+.carousel-item {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+.carousel-item:not(.active) {
+  display: none;
+}
+.carousel-item:hover {
+  z-index: 10;
+}
+
+@media (max-width: 1000px) {
+  .carousel-track {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    max-width: 700px;
+  }
+}
+
+@media (max-width: 700px) {
+  .recipes-home-container {
+    max-width: 100vw;
+    padding: 1rem 0.2rem;
+  }
+  .carousel-track {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    max-width: 350px;
+  }
+}
+
+/* Responsive
+@media (max-width: 900px) {
+  .carousel-track {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    max-width: 350px;
+  }
+} */
+
+/* @media (max-width: 700px) {
+  .recipes-home-container {
+    max-width: 100vw;
+    padding: 1rem 0.2rem;
+  }
+  .carousel-track {
+    max-width: 98vw;
+  }
+} */

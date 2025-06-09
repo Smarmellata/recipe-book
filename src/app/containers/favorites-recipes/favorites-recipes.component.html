@@ -1,0 +1,13 @@
+<div class="favorites-list-container">
+  <div class="recipes-grid">
+    <app-recipe-card
+      *ngFor="let recipe of favorites"
+      [name]="recipe.name"
+      [description]="recipe.description"
+      [imageUrl]="recipe.image"
+      [isFavorite]="true"
+      [id]="recipe.idMeal"
+      (click)="goToRecipe(recipe)"
+    ></app-recipe-card>
+  </div>
+</div>
