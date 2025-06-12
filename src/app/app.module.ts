@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule } from "@angular/forms";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { RecipeService } from "./services/recipe.service";
@@ -10,8 +9,8 @@ import { FoodSpinnerComponent } from "./components/food-spinner/food-spinner.com
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent, FoodSpinnerComponent],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
-  providers: [RecipeService],
+  imports: [BrowserModule, AppRoutingModule],
+  providers: [RecipeService, provideHttpClient()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

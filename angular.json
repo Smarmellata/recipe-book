@@ -44,8 +44,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "400kb",
-                  "maximumError": "500kb"
+                  "maximumWarning": "350kb",
+                  "maximumError": "400kb"
                 }
               ]
             }
@@ -54,11 +54,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "recipe-book:build"
+            "buildTarget": "recipe-book:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "recipe-book:build:production"
+              "buildTarget": "recipe-book:build:production"
             }
           }
         },

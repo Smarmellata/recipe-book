@@ -37,7 +37,7 @@ The project consists of the following main files and directories:
 To run the unit tests for the application, use the following command:
 
 ```bash
-ng test --code-coverage
+ng test
 ```
 
 This will launch Karma and execute the tests defined in the app.
