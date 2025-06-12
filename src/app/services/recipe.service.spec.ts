@@ -1,13 +1,16 @@
-import { TestBed } from "@angular/core/testing";
+import { fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { RecipeService } from "./recipe.service";
 import { HttpClient } from "@angular/common/http";
 import { of } from "rxjs";
 import { ApiRecipe } from "./recipe.mapper";
 import { Recipe } from "../models/recipe.model";
+import { SpinnerService } from "./spinner.service";
+import * as RecipeMapper from "./recipe.mapper";
 
 describe("RecipeService", () => {
   let service: RecipeService;
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
+  let spinnerSpy: jasmine.SpyObj<SpinnerService>;
 
   const apiRecipe: ApiRecipe = {
     idMeal: "1",
@@ -82,16 +85,16 @@ describe("RecipeService", () => {
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj("HttpClient", ["get"]);
+    spinnerSpy = jasmine.createSpyObj("SpinnerService", ["show", "hide"]);
+
     TestBed.configureTestingModule({
       providers: [
         RecipeService,
         { provide: HttpClient, useValue: httpClientSpy },
+        { provide: SpinnerService, useValue: spinnerSpy },
       ],
     });
     service = TestBed.inject(RecipeService);
-    // spyOn<any>(service, "callAndMap").and.callThrough();
-    // Mock the mapper to always return mappedRecipe for simplicity
-    spyOn<any>(service, "callAndMap").and.returnValue(of([mappedRecipe]));
   });
 
   afterEach(() => {
@@ -102,68 +105,95 @@ describe("RecipeService", () => {
     expect(service).toBeTruthy();
   });
 
-  it("should call searchRecipesByName", (done) => {
-    service.searchRecipesByName("pasta").subscribe((recipes) => {
-      expect(recipes[0].name).toBe("Test Meal");
-      done();
-    });
-    expect((service as any).callAndMap).toHaveBeenCalledWith(
-      jasmine.stringMatching(/search\.php\?s=pasta/)
-    );
-  });
-
-  it("should call filterRecipesByIngredient", (done) => {
-    service.filterRecipesByIngredient("chicken").subscribe((recipes) => {
-      expect(recipes[0].name).toBe("Test Meal");
-      done();
-    });
-    expect((service as any).callAndMap).toHaveBeenCalledWith(
-      jasmine.stringMatching(/filter\.php\?i=chicken/)
-    );
-  });
-
-  it("should call filterRecipesByCategory", (done) => {
-    service.filterRecipesByCategory("main").subscribe((recipes) => {
-      expect(recipes[0].name).toBe("Test Meal");
-      done();
-    });
-    expect((service as any).callAndMap).toHaveBeenCalledWith(
-      jasmine.stringMatching(/filter\.php\?c=main/)
-    );
-  });
-
-  it("should call filterRecipesByArea", (done) => {
-    service.filterRecipesByArea("italian").subscribe((recipes) => {
-      expect(recipes[0].name).toBe("Test Meal");
-      done();
-    });
-    expect((service as any).callAndMap).toHaveBeenCalledWith(
-      jasmine.stringMatching(/filter\.php\?a=italian/)
-    );
-  });
-
-  it("should get recipe details", (done) => {
+  it("should call http, map data, show/hide spinner, and delay hide at least 800ms (callAndMap)", fakeAsync(() => {
     httpClientSpy.get.and.returnValue(of({ meals: [apiRecipe] }));
-    service.getRecipeDetails("1").subscribe((recipe) => {
-      expect(recipe.idMeal).toBe("1");
-      done();
-    });
-  });
 
-  it("should get random recipe", (done) => {
-    httpClientSpy.get.and.returnValue(of({ meals: [apiRecipe] }));
-    service.getRandomRecipe().subscribe((recipe) => {
-      expect(recipe.idMeal).toBe("1");
-      done();
+    let result: any;
+    (service as any).callAndMap("test-url").subscribe((recipes: Recipe[]) => {
+      result = recipes;
     });
-  });
 
-  it("should get random recipes", (done) => {
-    spyOn(service, "getRandomRecipe").and.returnValue(of(mappedRecipe));
-    service.getRandomRecipes(3).subscribe((recipes) => {
-      expect(recipes.length).toBe(3);
-      expect(service.getRandomRecipe).toHaveBeenCalledTimes(3);
-      done();
+    expect(spinnerSpy.show).toHaveBeenCalled();
+
+    tick(0); // simulate immediate response
+
+    expect(httpClientSpy.get).toHaveBeenCalledWith("test-url");
+    expect(result).toEqual([mappedRecipe]);
+
+    // Spinner should not be hidden before 800ms
+    expect(spinnerSpy.hide).not.toHaveBeenCalled();
+    tick(800);
+    expect(spinnerSpy.hide).toHaveBeenCalled();
+  }));
+
+  describe("tests mocking callAndMap", () => {
+    beforeEach(() => {
+      spyOn<any>(service, "callAndMap").and.returnValue(of([mappedRecipe]));
+    });
+
+    it("should call searchRecipesByName", (done) => {
+      service.searchRecipesByName("pasta").subscribe((recipes) => {
+        expect(recipes[0].name).toBe("Test Meal");
+        done();
+      });
+      expect((service as any).callAndMap).toHaveBeenCalledWith(
+        jasmine.stringMatching(/search\.php\?s=pasta/)
+      );
+    });
+
+    it("should call filterRecipesByIngredient", (done) => {
+      service.filterRecipesByIngredient("chicken").subscribe((recipes) => {
+        expect(recipes[0].name).toBe("Test Meal");
+        done();
+      });
+      expect((service as any).callAndMap).toHaveBeenCalledWith(
+        jasmine.stringMatching(/filter\.php\?i=chicken/)
+      );
+    });
+
+    it("should call filterRecipesByCategory", (done) => {
+      service.filterRecipesByCategory("main").subscribe((recipes) => {
+        expect(recipes[0].name).toBe("Test Meal");
+        done();
+      });
+      expect((service as any).callAndMap).toHaveBeenCalledWith(
+        jasmine.stringMatching(/filter\.php\?c=main/)
+      );
+    });
+
+    it("should call filterRecipesByArea", (done) => {
+      service.filterRecipesByArea("italian").subscribe((recipes) => {
+        expect(recipes[0].name).toBe("Test Meal");
+        done();
+      });
+      expect((service as any).callAndMap).toHaveBeenCalledWith(
+        jasmine.stringMatching(/filter\.php\?a=italian/)
+      );
+    });
+
+    it("should get recipe details", (done) => {
+      httpClientSpy.get.and.returnValue(of({ meals: [apiRecipe] }));
+      service.getRecipeDetails("1").subscribe((recipe) => {
+        expect(recipe.idMeal).toBe("1");
+        done();
+      });
+    });
+
+    it("should get random recipe", (done) => {
+      httpClientSpy.get.and.returnValue(of({ meals: [apiRecipe] }));
+      service.getRandomRecipe().subscribe((recipe) => {
+        expect(recipe.idMeal).toBe("1");
+        done();
+      });
+    });
+
+    it("should get random recipes", (done) => {
+      spyOn(service, "getRandomRecipe").and.returnValue(of(mappedRecipe));
+      service.getRandomRecipes(3).subscribe((recipes) => {
+        expect(recipes.length).toBe(3);
+        expect(service.getRandomRecipe).toHaveBeenCalledTimes(3);
+        done();
+      });
     });
   });
 

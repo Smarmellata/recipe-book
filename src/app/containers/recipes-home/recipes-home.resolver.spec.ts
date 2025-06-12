@@ -1,11 +1,10 @@
-import { TestBed } from "@angular/core/testing";
-import { RecipesHomeResolver } from "./recipe-home.resolver";
+import { recipesHomeResolver } from "./recipes-home.resolver";
 import { RecipeService } from "../../services/recipe.service";
 import { of } from "rxjs";
 import { Recipe } from "../../models/recipe.model";
+import { TestBed } from "@angular/core/testing";
 
-describe("RecipesHomeResolver", () => {
-  let resolver: RecipesHomeResolver;
+describe("recipesHomeResolver", () => {
   let recipeServiceSpy: jasmine.SpyObj<RecipeService>;
 
   const mockRecipes: Recipe[] = [
@@ -18,24 +17,28 @@ describe("RecipesHomeResolver", () => {
       "getRandomRecipes",
     ]);
     TestBed.configureTestingModule({
-      providers: [
-        RecipesHomeResolver,
-        { provide: RecipeService, useValue: recipeServiceSpy },
-      ],
+      providers: [{ provide: RecipeService, useValue: recipeServiceSpy }],
     });
-    resolver = TestBed.inject(RecipesHomeResolver);
-  });
-
-  it("should be created", () => {
-    expect(resolver).toBeTruthy();
   });
 
   it("should resolve recipes using RecipeService", (done) => {
     recipeServiceSpy.getRandomRecipes.and.returnValue(of(mockRecipes));
-    resolver.resolve().subscribe((recipes) => {
-      expect(recipes).toEqual(mockRecipes);
+    // Create mock ActivatedRouteSnapshot and RouterStateSnapshot
+    const mockRoute = {} as any;
+    const mockState = {} as any;
+    const result = TestBed.runInInjectionContext(() =>
+      recipesHomeResolver(mockRoute, mockState)
+    );
+    if (result && typeof (result as any).subscribe === "function") {
+      (result as any).subscribe((recipes: Recipe[]) => {
+        expect(recipes).toEqual(mockRecipes);
+        expect(recipeServiceSpy.getRandomRecipes).toHaveBeenCalledWith(10);
+        done();
+      });
+    } else {
+      expect(result).toEqual(mockRecipes);
       expect(recipeServiceSpy.getRandomRecipes).toHaveBeenCalledWith(10);
       done();
-    });
+    }
   });
 });
