@@ -40,12 +40,17 @@ To run the unit tests for the application, use the following command:
 ng test --code-coverage
 ```
 
-This will launch Karma and execute the tests defined in the `app.component.spec.ts` file.
+This will launch Karma and execute the tests defined in the app.
 
 ## Usage Guidelines
 
 - The application is designed to be user-friendly and allows for easy management of recipes.
 - You can extend the functionality by adding more components and services as needed.
+
+## Api integrations
+
+- The application is integrated with API's provided from [themealdb](https://www.themealdb.com/).
+- Favorites instead are stored in browser local storage.
 
 ## License
 
