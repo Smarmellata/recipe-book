@@ -36,7 +36,9 @@ export class RecipeListComponent {
       .pipe(
         map((results) => {
           // Flatten all arrays and deduplicate by idMeal
-          const allRecipes = ([] as Recipe[]).concat(...results);
+          const allRecipes = ([] as Recipe[]).concat(
+            ...(results as unknown as Recipe[])
+          );
           const unique = new Map();
           allRecipes.forEach((r) => {
             if (r && r.idMeal) unique.set(r.idMeal, r);

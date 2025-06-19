@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { RecipeService } from "../../services/recipe.service";
 import { Recipe } from "../../models/recipe.model";
 
@@ -14,11 +14,18 @@ export class RecipeDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private recipeService: RecipeService
   ) {}
 
   ngOnInit(): void {
-    this.recipe = this.route.snapshot.data["recipe"];
+    const recipe = this.route.snapshot.data["recipe"];
+    console.log("Recipe Detail Component: ", recipe);
+    if (!recipe) {
+      this.router.navigate(["/home"]);
+    }
+
+    this.recipe = recipe;
     if (this.recipe) {
       this.isFavorite = this.checkIfFavorite(this.recipe.idMeal);
     }

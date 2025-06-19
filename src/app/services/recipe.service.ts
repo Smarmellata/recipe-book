@@ -18,14 +18,20 @@ export class RecipeService {
 
   constructor(private http: HttpClient, private spinner: SpinnerService) {}
 
-  private callAndMap(finalUrl: string): Observable<Recipe[]> {
+  private callAndMap(finalUrl: string): Observable<Recipe[] | null> {
     this.spinner.show();
 
     const start = Date.now();
     return this.http.get<ApiResponse>(finalUrl).pipe(
-      map((response) =>
-        response.meals?.map((meal) => mapApiRecipeToRecipe(meal))
-      ),
+      map((response) => {
+        if (typeof response.meals === "string") {
+          return null;
+        } else if (!response || !response.meals) {
+          return null;
+        } else {
+          return response.meals?.map((meal) => mapApiRecipeToRecipe(meal));
+        }
+      }),
       finalize(() => {
         const elapsed = Date.now() - start;
         setTimeout(() => this.spinner.hide(), Math.max(0, 800 - elapsed));
@@ -33,37 +39,42 @@ export class RecipeService {
     );
   }
 
-  searchRecipesByName(recipeName: string): Observable<Recipe[]> {
+  searchRecipesByName(recipeName: string): Observable<Recipe[] | null> {
     return this.callAndMap(`${this.apiUrl}search.php?s=${recipeName}`);
   }
 
-  filterRecipesByIngredient(ingredientName: string): Observable<Recipe[]> {
+  filterRecipesByIngredient(
+    ingredientName: string
+  ): Observable<Recipe[] | null> {
     return this.callAndMap(`${this.apiUrl}filter.php?i=${ingredientName}`);
   }
 
-  filterRecipesByCategory(categoryName: string): Observable<Recipe[]> {
+  filterRecipesByCategory(categoryName: string): Observable<Recipe[] | null> {
     return this.callAndMap(`${this.apiUrl}filter.php?c=${categoryName}`);
   }
 
-  filterRecipesByArea(areaName: string): Observable<Recipe[]> {
+  filterRecipesByArea(areaName: string): Observable<Recipe[] | null> {
     return this.callAndMap(`${this.apiUrl}filter.php?a=${areaName}`);
   }
 
-  getRecipeDetails(id: string): Observable<Recipe> {
+  getRecipeDetails(id: string): Observable<Recipe | undefined> {
     return this.callAndMap(`${this.apiUrl}lookup.php?i=${id}`).pipe(
-      map((recipes) => recipes[0])
+      map((recipes) => recipes?.[0])
     );
   }
 
-  getRandomRecipe(): Observable<Recipe> {
+  getRandomRecipe(): Observable<Recipe | undefined> {
     return this.callAndMap(`${this.apiUrl}random.php`).pipe(
-      map((response) => response[0])
+      map((response) => response?.[0])
     );
   }
 
   getRandomRecipes(n: number): Observable<Recipe[]> {
     //used this trick since the API to have multiple randoms recipes is just for premium users
-    const requests = Array.from({ length: n }, () => this.getRandomRecipe());
+    const requests = Array.from(
+      { length: n },
+      () => this.getRandomRecipe() as Observable<Recipe>
+    );
     return forkJoin(requests);
   }
 
